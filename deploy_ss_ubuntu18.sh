@@ -116,7 +116,7 @@ User=root
 ExecStart=/usr/bin/ss-server -c '$config_file'
 [Install]
 WantedBy=multi-user.target
-    $ssserver_service_file
+'>  $ssserver_service_file
     systemctl daemon-reload
     sleep 1
     service ssserver stop
