@@ -5,7 +5,7 @@ Script to install and deploy shadowsocks and v2ray-plugin in linux server.
 ```
 # deploy_ss_ubuntu18.sh --help
 Deploy and start Shadowsocks server 
- --ip           Server IP Shadowsocks listen, default use first non-loopback IP
+ --ip           Server IP Shadowsocks listen, default use first non-loopback IP. 
  --port         Server Port, default 55555 
  --method       Encryption method for traffic, default aes-256-gcm 
  --password     Password for server
@@ -23,9 +23,10 @@ NOT recommended! Below command will start everything with default settings.
 # sudo deploy_ss_ubuntu18.sh
 ```
 ## 2. deploy proxy server with v2ray-plugin options
-Recommended way. Below command will create server with v2ray-plugin. The hostname is "host=" is the DNS name of your host. For AWS server, you could get your host name from the console. .
+Recommended way. Below command will create server with v2ray-plugin. The hostname is "host=" is the DNS name of your host. For AWS server, you could get your host name from the console. IP is the internal backend IP of your server, normally it's the eth0's IP addresses. 
 ```
 # deploy_ss_ubuntu18.sh \
+--ip 172.31.16.122 \
 --port 33333 \
 --password bij98324lj \
 --plugin_opts "server;host=ec2-3-115-18-88.ap-northeast-1.compute.amazonaws.com"
