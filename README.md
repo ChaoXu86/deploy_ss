@@ -39,10 +39,10 @@ Recommended way. Below command will create server with v2ray-plugin. The hostnam
 * v2ray-plugin https://github.com/shadowsocks/v2ray-plugin/releases
 ## configuration
 After successfully deployed on server, the script will show the configuration on server. Make sure set the same value on client 
-* server
 * server_port
 * password
 * method
 * plugin
 * plugin_opts
-  
+
+NOTE: On client configuration, the server IP is the float IP you get from AWS. Not the internal eth0's IP of the server!
