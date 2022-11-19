@@ -3,7 +3,7 @@
 ip=""
 port="55555"
 method="aes-256-gcm"
-password="qweQWE123!@#"
+password=`tr -dc '_A-Za-z0-9' </dev/urandom | head -c 16`
 plugin_opts=""
 config_file="/etc/shadowsocks.json"
 baseurl="https://github.com"
