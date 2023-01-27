@@ -2,7 +2,7 @@
 # DEFAULT VALUES
 ip=""
 port="55555"
-method="aes-256-gcm"
+method="xchacha20-ietf-poly1305"
 password=`tr -dc '_A-Za-z0-9' </dev/urandom | head -c 16`
 plugin_opts=""
 config_file="/etc/shadowsocks.json"
@@ -21,7 +21,7 @@ $self [--ip IP] [--port PORT] [--method METHOD] [--plugin_opts OPTIONS] [--passw
 Deploy and start Shadowsocks server 
  --ip           Server IP Shadowsocks listen, default use first non-loopback IP
  --port         Server Port, default 55555 
- --method       Encryption method for traffic, default aes-256-gcm 
+ --method       Encryption method for traffic, default xchacha20-ietf-poly1305 
  --password     Password for server
  --plugin_opts  Plugin options, only v2ray-plugin is supported
  --help | -h    Print this text
