@@ -10,6 +10,8 @@ baseurl="https://github.com"
 plugin_install_path="/usr/local/bin/v2ray-plugin"
 ssserver_service_file="/etc/systemd/system/ssserver.service"
 
+prog=$(basename "$0")
+
 [[ "$1" == "-debug" ]] && set -x && shift
 
 self="$(basename "$0")"
@@ -28,9 +30,9 @@ Deploy and start Shadowsocks server
 
 Example:
   1. deploy proxy server with v2ray plugin  
-    # deploy.sh --plugin_opts "server;host=ec2-3-115-18-45.ap-northeast-1.compute.amazonaws.com"
+    # $prog --plugin_opts "server;host=ec2-3-115-18-45.ap-northeast-1.compute.amazonaws.com"
   2. deploy proxy server with ip 192.168.0.1 and port 12321
-    # deploy.sh --ip 192.168.0.1 --port 12321
+    # $prog --ip 192.168.0.1 --port 12321
 EOI
 }
 
@@ -88,8 +90,6 @@ echo "
     echo '{
     "server":"'$ip'",
     "server_port":'$port',
-    "local_address": "127.0.0.1",
-    "local_port":1080,
     "password":"'$password'",
     "timeout":300,
     "method":"'$method'",

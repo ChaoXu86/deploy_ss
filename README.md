@@ -1,13 +1,13 @@
 # deploy_ss
-Script to install and deploy shadowsocks and v2ray-plugin in linux server.
+Script to install and deploy shadowsocks and v2ray-plugin on ubuntu.
 
 # Usage of script
 ```
-# deploy_ss_ubuntu18.sh --help
+# deploy_ss_ubuntu.sh --help
 Deploy and start Shadowsocks server 
  --ip           Server IP Shadowsocks listen, default use first non-loopback IP. 
  --port         Server Port, default 55555 
- --method       Encryption method for traffic, default aes-256-gcm 
+ --method       Encryption method for traffic, default xchacha20-ietf-poly1305 
  --password     Password for server
  --plugin_opts  Plugin options, only v2ray-plugin is supported
  --help | -h    Print this text
@@ -15,17 +15,18 @@ Deploy and start Shadowsocks server
 
 
 # Example
-The script is only tested and verified on ubuntu 18. By default, it will starts shadowsocks services on port 55555 of the first available IPv4 address. It's recommended to deploy the v2ray-plugin along with the server to avoid blocked by GFW. One ssserver service will also be added to system to ensure the proxy server will always running. 
+The script is only tested and verified on ubuntu 18 and 22. By default, it will starts shadowsocks services on port 55555 of the first available IPv4 address. It's recommended to deploy the v2ray-plugin along with the server to avoid blocked by GFW. One ssserver service will also be added to system to ensure the proxy server will always running. 
 
 ## 1. deploy proxy server default options
 NOT recommended! Below command will start everything with default settings.
 ```
-# sudo deploy_ss_ubuntu18.sh
+# chomd +x deploy_ss_ubunt.sh
+# sudo deploy_ss_ubuntu.sh
 ```
 ## 2. deploy proxy server with v2ray-plugin options
 Recommended way. Below command will create server with v2ray-plugin. The hostname is "host=" is the DNS name of your host. For AWS server, you could get your host name from the console. IP is the internal backend IP of your server, normally it's the eth0's IP addresses. 
 ```
-# deploy_ss_ubuntu18.sh \
+# deploy_ss_ubuntu.sh \
 --ip 172.31.16.122 \
 --port 33333 \
 --password bij98324lj \
