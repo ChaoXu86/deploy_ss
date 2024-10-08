@@ -2,7 +2,7 @@
 # DEFAULT VALUES
 ip=""
 port="55555"
-method="xchacha20-ietf-poly1305"
+method="chacha20-ietf-poly1305"
 password=`tr -dc '_A-Za-z0-9' </dev/urandom | head -c 16`
 plugin_opts=""
 config_file="/etc/shadowsocks.json"
@@ -50,13 +50,15 @@ function die() {
     [[ $# -gt 0 ]] && echo "$self: $*" 1>&2
     exit "$exit_code"
 }
+function install_dependency() {
+    apt update
+    apt install -y curl net-tools wget iproute2 wget xz-utils git
+}
 
 function download_shadowsock() {
     echo "
 ========== 1. Downloading ShadowSocks ==========
 "
-    #apt update
-    #apt -y install shadowsocks-libev 
     wget https://github.com/shadowsocks/shadowsocks-rust/releases/download/v1.21.0/shadowsocks-v1.21.0.x86_64-unknown-linux-gnu.tar.xz -P ./tmp_download
     tar xvf ./tmp_download/*.tar.xz
     mv ssserver $ssserver_install_path
@@ -197,6 +199,7 @@ while (( $# > 0 )); do
 done
 
 root_check
+install_dependency
 download_shadowsock
 download_v2ray
 generate_config
