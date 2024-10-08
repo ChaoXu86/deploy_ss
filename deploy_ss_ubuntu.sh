@@ -10,7 +10,10 @@ baseurl="https://github.com"
 plugin_install_path="/usr/local/bin/v2ray-plugin"
 ssserver_install_path="/usr/local/bin/ssserver"
 ssserver_service_file="/etc/systemd/system/ssserver.service"
-
+enable_tls="false"
+tls_key_file="myss.com.key"
+tls_cert_file="myss.com.crt"
+tls_certificate_path="/etc/myshadowsock_ca/"
 prog=$(basename "$0")
 
 [[ "$1" == "-debug" ]] && set -x && shift
@@ -27,6 +30,7 @@ Deploy and start Shadowsocks server
  --method       Encryption method for traffic, default xchacha20-ietf-poly1305 
  --password     Password for server
  --plugin_opts  Plugin options, only v2ray-plugin is supported
+ --tls          Enable TLS. When TLS is enabled, method will be set to 'none'
  --help | -h    Print this text
 
 Example:
@@ -34,6 +38,8 @@ Example:
     # $prog --plugin_opts "server;host=ec2-3-115-18-45.ap-northeast-1.compute.amazonaws.com"
   2. deploy proxy server with ip 192.168.0.1 and port 12321
     # $prog --ip 192.168.0.1 --port 12321
+  3. deploy proxy server with TLS enabled
+    # $prog --ip 192.168.0.1 --port 12321 --tls
 EOI
 }
 
@@ -80,6 +86,24 @@ function download_v2ray() {
     v2ray-plugin --version 
 }
 
+function generate_tls_certificate() {
+
+    if [[ $enable_tls == "true" ]]; 
+    then
+       echo "
+========== Generate TLS certificate   ==========
+"
+       mkdir $tls_certificate_path
+       openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 \
+	-nodes -keyout $tls_key_file -out $tls_cert_file -subj "/CN=myss.com" \
+	-addext "subjectAltName=DNS:myss.com,DNS:*.myss.com"
+       mv $tls_key_file $tls_certificate_path
+       mv $tls_cert_file $tls_certificate_path
+       echo "TLS private key: ${tls_certificate_path}${tls_key_file}"
+       echo "TLS certificate: ${tls_certificate_path}${tls_cert_file}"
+    fi
+}
+
 function generate_config() {
 echo "
 ========== 3. Auto configuration      ==========
@@ -95,6 +119,14 @@ echo "
     else
     plugin="v2ray-plugin"
     fi
+
+    if [[ $enable_tls == "true" ]];
+    then
+    method="none"
+    plugin="v2ray-plugin"
+    plugin_opts="server;tls;host=myss.com;key=${tls_certificate_path}${tls_key_file};cert=${tls_certificate_path}${tls_cert_file}"
+    fi
+
     echo '{
     "server":"'$ip'",
     "server_port":'$port',
@@ -150,6 +182,11 @@ function finish() {
 All Done! Make sure your client configure server's
 "
     cat $config_file
+    if [[ $enable_tls == "true" ]];
+    then
+        echo "IMPORT NOTE: TLS enabled, import ${tls_certificate_path}${tls_cert_file} to your browser/system"
+	cat ${tls_certificate_path}${tls_cert_file}
+    fi
 }
 
 ############ MAIN ############
@@ -178,6 +215,10 @@ while (( $# > 0 )); do
 	    plugin_opts="$2"
 	    shift 2
 	    ;;
+	("--tls")
+	    enable_tls="true"
+	    shift 1
+	    ;;
         ("-h"|"--help")
             usage
             die 0
@@ -202,6 +243,7 @@ root_check
 install_dependency
 download_shadowsock
 download_v2ray
+generate_tls_certificate
 generate_config
 start_ssserver
 post_check
