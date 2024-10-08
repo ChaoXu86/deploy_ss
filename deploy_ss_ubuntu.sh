@@ -8,6 +8,7 @@ plugin_opts=""
 config_file="/etc/shadowsocks.json"
 baseurl="https://github.com"
 plugin_install_path="/usr/local/bin/v2ray-plugin"
+ssserver_install_path="/usr/local/bin/ssserver"
 ssserver_service_file="/etc/systemd/system/ssserver.service"
 
 prog=$(basename "$0")
@@ -54,8 +55,13 @@ function download_shadowsock() {
     echo "
 ========== 1. Downloading ShadowSocks ==========
 "
-    apt update
-    apt -y install shadowsocks-libev 
+    #apt update
+    #apt -y install shadowsocks-libev 
+    wget https://github.com/shadowsocks/shadowsocks-rust/releases/download/v1.21.0/shadowsocks-v1.21.0.x86_64-unknown-linux-gnu.tar.xz -P ./tmp_download
+    tar xvf ./tmp_download/*.tar.xz
+    mv ssserver $ssserver_install_path
+    rm sslocal ssurl ssmanager ssservice 
+    rm -rf ./tmp_download
 }
 
 function download_v2ray() {
@@ -113,7 +119,7 @@ Type=simple
 Restart=always
 RestartSec=1
 User=root
-ExecStart=/usr/bin/ss-server -c '$config_file'
+ExecStart='$sserver_install_path' -c '$config_file'
 [Install]
 WantedBy=multi-user.target
 '>  $ssserver_service_file
