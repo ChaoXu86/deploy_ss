@@ -153,7 +153,7 @@ Type=simple
 Restart=always
 RestartSec=1
 User=root
-ExecStart='$sserver_install_path' -c '$config_file'
+ExecStart='$ssserver_install_path' -c '$config_file'
 [Install]
 WantedBy=multi-user.target
 '>  $ssserver_service_file
